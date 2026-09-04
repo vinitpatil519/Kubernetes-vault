@@ -1,8 +1,6 @@
 ## Kubernetes Kickstarter
 
-### Kubernetes In One Shot
 
-Learn Kubernetes concepts in a 12 hour tutorial by TrainWithShubham [here](https://youtu.be/W04brGNgxN4?si=KuUs-ajJOE7TfYs-)
 
 ## Cluster Architecture at a Glance
 
@@ -148,10 +146,4 @@ flowchart LR
 38. **Database Deployments** - [MySQL with Persistence](./examples/mysql/) - Stateful application patterns
 39. **Web Application Hosting** - [NGINX Deployment](./examples/nginx/) - Complete application stacks
 
-## Practice Projects
 
-1. [Microservices on k8s](https://github.com/LondheShubham153/microservices-k8s)
-2. [Django App Deployment](https://github.com/LondheShubham153/django-todo-cicd)
-3. [Redit Clone with Ingress](https://github.com/LondheShubham153/reddit-clone-k8s-ingress)
-4. [AWS EKS Best Practices](https://github.com/LondheShubham153/aws-eks-devops-best-practices)
-5. [For More Challenges, Check Out These Ideas](./examples/More_K8s_Practice_Ideas.md)
