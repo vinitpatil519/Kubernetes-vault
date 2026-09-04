@@ -51,6 +51,34 @@ kubectl get pods -n kube-system
 #
 ## What we are going to implement:
 In this demo, we will create an deployment & service files for Apache and with the help of HPA, we will automatically scale the number of pods based on CPU utilization.
+
+```mermaid
+flowchart TD
+    KUBELET["kubelet cAdvisor"] --> MS["Metrics Server"]
+    MS --> CPU["CPU and memory usage per Pod"]
+    CPU --> HPA["HorizontalPodAutoscaler"]
+    HPA --> COMPARE{"Usage vs target utilization"}
+    COMPARE -->|"Above target"| UP["Scale up: increase replicas"]
+    COMPARE -->|"Below target"| DOWN["Scale down: decrease replicas"]
+    COMPARE -->|"Within target"| HOLD["No change"]
+    UP --> DEP["Deployment"]
+    DOWN --> DEP
+    DEP --> RS["ReplicaSet"]
+    RS --> PODS["Pods"]
+```
+
+> **Figure:** The HPA control loop — Metrics Server supplies usage, the HPA compares it to the target and adjusts the Deployment's replica count.
+
+```mermaid
+flowchart LR
+    VPAMS["Metrics Server"] --> VPA["VerticalPodAutoscaler"]
+    VPA --> REC["Recommendation<br/>new CPU and memory requests"]
+    REC --> RECREATE["Pod recreated with updated resources"]
+    RECREATE --> POD["Pod with resized requests and limits"]
+```
+
+> **Figure:** VPA scales a Pod vertically by adjusting its resource requests, which requires the Pod to be recreated.
+
 #
 ### Steps to implement HPA:
 

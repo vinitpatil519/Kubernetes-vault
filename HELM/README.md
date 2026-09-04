@@ -13,6 +13,20 @@ chmod 700 get_helm.sh
 ./get_helm.sh
 ```
 
+```mermaid
+flowchart LR
+    VALUES["values.yaml<br/>configuration"] --> ENGINE["Helm template engine"]
+    TPL["templates/*.yaml<br/>parameterized manifests"] --> ENGINE
+    CHART["Chart.yaml<br/>chart metadata"] --> ENGINE
+    ENGINE --> MANIFEST["Rendered Kubernetes manifests"]
+    MANIFEST --> API["API Server"]
+    API --> REL["Release<br/>Deployment · Service · Ingress · HPA"]
+    REL --> POD["Pods"]
+    ROLL["helm rollback"] -.-> API
+```
+
+> **Figure:** Helm renders templates with values into plain manifests, applies them as a versioned release, and keeps release history for rollback.
+
 ## Chart Structure
 ```bash
 

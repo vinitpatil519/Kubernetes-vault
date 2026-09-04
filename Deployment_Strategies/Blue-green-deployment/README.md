@@ -22,6 +22,20 @@
 
 ![image](https://github.com/user-attachments/assets/ad967289-f554-473b-ba67-4953e57270c2)
 
+```mermaid
+flowchart LR
+    USERS["Users"] --> SVC["Service<br/>selector: version"]
+    SVC ==>|"Live traffic"| BLUE["Blue Deployment<br/>current version"]
+    SVC -.->|"No traffic yet"| GREEN["Green Deployment<br/>new version"]
+    BLUE --> BP["Pods v1"]
+    GREEN --> GP["Pods v2"]
+    TEST["Test the Green environment"] --> GREEN
+    SWITCH["Update the Service selector"] -.->|"Traffic switches to Green"| SVC
+```
+
+> **Figure:** Both environments run side by side; the cutover is a single Service selector change, and the rollback is the same change in reverse.
+
+
 ---
 
 ### Prerequisites to try this:

@@ -18,6 +18,23 @@
 
 ![image](https://github.com/user-attachments/assets/71725083-89a7-4e93-a1ed-df4c8adc94c3)
 
+```mermaid
+flowchart TD
+    CP["Control Plane<br/>API Server"] --> DS["DaemonSet controller"]
+    DS --> NA["Node A"]
+    DS --> NB["Node B"]
+    DS --> NC["Node C"]
+    NA --> PA["Pod<br/>monitoring agent"]
+    NB --> PB["Pod<br/>monitoring agent"]
+    NC --> PC["Pod<br/>monitoring agent"]
+    NEW["New Node joins the cluster"] -.-> DS
+    DS -.->|"Pod scheduled automatically"| ND["Node D"]
+    ND --> PD["Pod<br/>monitoring agent"]
+```
+
+> **Figure:** A DaemonSet keeps exactly one Pod per node, including on nodes that join the cluster later.
+
+
 - In the above screenshot, you can see 2 daemonsets are deployed in the kube-system namespace. i.e, Canal and Kube-proxy.
 - Similarily, we can also create custom daemonset by following below steps.
 

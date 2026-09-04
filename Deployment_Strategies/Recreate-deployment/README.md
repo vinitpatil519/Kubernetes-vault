@@ -17,6 +17,18 @@
 
 ![image](https://github.com/user-attachments/assets/90197afc-a892-47d5-9160-c4543b64defa)
 
+```mermaid
+flowchart TD
+    V1["Pods running v1"] --> TERM["Terminate all v1 Pods"]
+    TERM --> DOWN["Downtime window<br/>no Pods serving traffic"]
+    DOWN --> CREATE["Create all v2 Pods"]
+    CREATE --> READY["Pods pass readiness probes"]
+    READY --> V2["Pods running v2"]
+```
+
+> **Figure:** Recreate strategy — every old Pod is stopped before any new Pod starts, so downtime is unavoidable but the application state is fully renewed.
+
+
 ---
 
 ### Prerequisites to try this:

@@ -2,6 +2,28 @@
 
 This guide provides step-by-step instructions for installing Minikube on Ubuntu. Minikube allows you to run a single-node Kubernetes cluster locally for development and testing purposes.
 
+```mermaid
+flowchart LR
+    KCTL["kubectl on the host"] --> API
+    subgraph MK["Minikube node: single Docker container or VM"]
+        API["API Server"]
+        ETCD["ETCD"]
+        SCHED["Scheduler"]
+        CM["Controller Manager"]
+        KUBELET["kubelet"]
+        PROXY["kube-proxy"]
+        PODS["Pods"]
+    end
+    API --- ETCD
+    API --- SCHED
+    API --- CM
+    API --> KUBELET --> PODS
+    ADDONS["Addons<br/>ingress · metrics-server · dashboard"] -.-> API
+```
+
+> **Figure:** Minikube packs the control plane and the worker role into a single node, which is why `kubectl get nodes` shows exactly one entry.
+
+
 ## Pre-requisites
 
 * Ubuntu OS

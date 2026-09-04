@@ -1,20 +1,79 @@
 ## Kubernetes Kickstarter
 
+## Cluster Architecture at a Glance
+
+```mermaid
+flowchart TD
+    DEV["Developer"] --> KCTL["kubectl"]
+    KCTL --> API["API Server"]
+
+    subgraph CP["Control Plane"]
+        API --- ETCD["ETCD"]
+        API --- SCHED["Scheduler"]
+        API --- CM["Controller Manager"]
+        API --- CCM["Cloud Controller Manager"]
+    end
+
+    subgraph NA["Worker Node A"]
+        KUBELET_A["kubelet"] --> RUNTIME_A["Container Runtime"]
+        RUNTIME_A --> POD_A1["Pod"]
+        RUNTIME_A --> POD_A2["Pod"]
+        PROXY_A["kube-proxy"]
+    end
+
+    subgraph NB["Worker Node B"]
+        KUBELET_B["kubelet"] --> RUNTIME_B["Container Runtime"]
+        RUNTIME_B --> POD_B1["Pod"]
+        PROXY_B["kube-proxy"]
+    end
+
+    API --> KUBELET_A
+    API --> KUBELET_B
+    USER["End User"] --> ING["Ingress"] --> SVC["Service"]
+    SVC --> POD_A1
+    SVC --> POD_B1
+```
+
+> **Figure:** The full Kubernetes cluster — control plane components, worker nodes and the path user traffic takes to reach a Pod.
+
 
 ## Architecture Guides
 
 1. [Kubernetes Architecture Guide](./kubernetes_architecture.md)
 
+## Cheat Sheet
+
+1. [Kubernetes Cheat Sheet](./cheat-sheet/kubernetes-cheatsheet.md) - Every kubectl and helm command worth remembering, grouped by task
+
 ## Examples with Interview Questions
 
 1. [NGINX with Deployment & Service](./examples/nginx)
 2. [MySQL with ConfigMaps, Secrets & Persistent Volumes](./examples/mysql)
+3. [All Examples Index](./examples/) - What each example demonstrates and the order to work through them
 
 ## Installation Guides
 
 1. [Kubeadm Installation Scripts](./Kubeadm_Installation_Scripts_and_Documentation/)
 2. [Minikube Installation Guide](./minikube_installation.md)
 3. [EKS Installation Guide](./eks_cluster_setup.md)
+
+
+```mermaid
+flowchart LR
+    A["Architecture"] --> B["Installation<br/>Minikube · KIND · Kubeadm · EKS"]
+    B --> C["Workloads<br/>Pod · Deployment · DaemonSet"]
+    C --> D["Configuration<br/>ConfigMap · Secret"]
+    D --> E["Storage<br/>PersistentVolume · PersistentVolumeClaim"]
+    E --> F["Networking<br/>Service · Ingress"]
+    F --> G["Scaling<br/>HPA · VPA"]
+    G --> H["Security<br/>RBAC"]
+    H --> I["Scheduling<br/>Taints and Tolerations"]
+    I --> J["Packaging<br/>Helm"]
+    J --> K["Deployment Strategies"]
+    K --> L["CI/CD with Kubernetes"]
+```
+
+> **Figure:** Suggested learning path through the topics covered in this repository.
 
 ## Kubernetes Concepts Covered in this Repository:
 
@@ -84,4 +143,3 @@
 37. **Microservices Architecture** - [Practice Projects](./examples/More_K8s_Practice_Ideas.md)
 38. **Database Deployments** - [MySQL with Persistence](./examples/mysql/) - Stateful application patterns
 39. **Web Application Hosting** - [NGINX Deployment](./examples/nginx/) - Complete application stacks
-

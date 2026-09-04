@@ -15,6 +15,24 @@ kubectl get nodes
 #
 ### What we are going to implement:
 - In this demo, we will create a deployment and services for Apache and with the help of RBAC, we will manage the access.
+
+```mermaid
+flowchart TD
+    USER["User or ServiceAccount"] --> REQ["Request to the API Server"]
+    REQ --> AUTHN["Authentication<br/>certificate · token · ServiceAccount"]
+    AUTHN -->|"Identity rejected"| DENY1["401 Unauthorized"]
+    AUTHN -->|"Identity verified"| AUTHZ["Authorization: RBAC"]
+    AUTHZ --> RB["RoleBinding / ClusterRoleBinding<br/>binds a subject to a role"]
+    RB --> ROLE["Role / ClusterRole<br/>verbs on resources"]
+    ROLE --> CHECK{"Does a rule allow this verb on this resource?"}
+    CHECK -->|"Yes"| ALLOW["Permission granted<br/>request proceeds"]
+    CHECK -->|"No"| DENY2["403 Forbidden"]
+    ALLOW --> ADM["Admission control"]
+    ADM --> ETCD["Change persisted in ETCD"]
+```
+
+> **Figure:** Authentication proves *who you are*; RBAC authorization decides *what you may do*. A Role lists permissions, a RoleBinding grants them to a subject.
+
 #
 
 ### Steps to implement RBAC:

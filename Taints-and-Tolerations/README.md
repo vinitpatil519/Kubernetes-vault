@@ -8,6 +8,21 @@
 - By default, pods cannot be scheduled on tainted nodes unless they have a special permission called toleration.
 - A pod will only be allocated to a node when a toleration on the pod corresponds with the taint of the node.
 
+```mermaid
+flowchart TD
+    POD["Pod to be scheduled"] --> SCHED["Scheduler"]
+    SCHED --> NODES["Candidate Nodes"]
+    NODES --> TAINT{"Node has a taint?"}
+    TAINT -->|"No taint"| OK["Pod can be scheduled"]
+    TAINT -->|"Tainted"| TOL{"Pod has a matching toleration?"}
+    TOL -->|"Yes"| OK
+    TOL -->|"No, effect NoSchedule"| SKIP["Node rejected<br/>Pod stays Pending"]
+    TOL -->|"No, effect NoExecute"| EVICT["Running Pods evicted from the Node"]
+```
+
+> **Figure:** Taints repel Pods from a node; a matching toleration on the Pod is what lets it through.
+
+
 ---
 
 ### Implementation of Taints and Tolerations:

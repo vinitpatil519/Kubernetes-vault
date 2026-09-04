@@ -28,6 +28,22 @@
 
 ![image](https://github.com/user-attachments/assets/5d08039b-e06b-4c08-aaff-b68dc435d570)
 
+```mermaid
+flowchart TD
+    USERS["Incoming traffic"] --> ING["Ingress / Service"]
+    ING -->|"90%"| STABLE["Stable Deployment v1"]
+    ING -->|"10%"| CANARY["Canary Deployment v2"]
+    STABLE --> SP["Pods v1"]
+    CANARY --> CP["Pods v2"]
+    CP --> MON["Monitor errors and latency"]
+    MON -->|"Healthy"| INC["Increase share: 25% · 50% · 100%"]
+    MON -->|"Unhealthy"| ROLL["Scale canary to zero and roll back"]
+    INC --> FULL["Canary becomes the new stable version"]
+```
+
+> **Figure:** Canary release — a small traffic slice validates the new version before it is promoted to all users.
+
+
 ---
 
 ### Prerequisites to try this:

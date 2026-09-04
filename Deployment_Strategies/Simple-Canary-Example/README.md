@@ -38,6 +38,19 @@ In this example:
 - Both deployments are selected by the same service using the common label `app: web`
 - Traffic is distributed proportionally to the number of pods
 
+```mermaid
+flowchart TD
+    ING["Ingress"] --> SVC["Service<br/>selector: app=web"]
+    SVC -->|"4 of 5 endpoints ≈ 80%"| NGX["NGINX Deployment v1<br/>4 replicas"]
+    SVC -->|"1 of 5 endpoints ≈ 20%"| APA["Apache Deployment v2<br/>1 replica"]
+    NGX --> NP["Pods: app=web, version=v1"]
+    APA --> AP["Pods: app=web, version=v2"]
+    SCALE["Change replica counts"] -.->|"Shifts the traffic split"| SVC
+```
+
+> **Figure:** With one Service selecting both Deployments, the traffic split is simply the ratio of Pod replicas behind it.
+
+
 ---
 
 ### Prerequisites to try this:

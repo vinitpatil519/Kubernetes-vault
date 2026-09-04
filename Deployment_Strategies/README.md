@@ -12,6 +12,18 @@
   - Faster Rollback
   - More Frequency
 
+```mermaid
+graph TD
+    DEP["Deployment<br/>desired state and strategy"] --> RS1["ReplicaSet v1"]
+    DEP --> RS2["ReplicaSet v2"]
+    RS1 --> P1["Pod"]
+    RS1 --> P2["Pod"]
+    RS2 --> P3["Pod"]
+    RS2 --> P4["Pod"]
+```
+
+> **Figure:** Ownership hierarchy — a Deployment owns ReplicaSets, and each ReplicaSet owns the Pods it created. A new version means a new ReplicaSet.
+
 ## Types of deployment strategies
 
 | Types    | Links |

@@ -20,6 +20,22 @@
 
 ![image](https://github.com/user-attachments/assets/ef9a9088-0f0b-4645-9c66-505481c7eb6f)
 
+```mermaid
+flowchart TD
+    START["Deployment updated with a new image"] --> NEWRS["New ReplicaSet created"]
+    NEWRS --> CREATE["Create one new Pod<br/>within maxSurge"]
+    CREATE --> PROBE["Readiness probe / health check"]
+    PROBE -->|"Ready"| TERM["Terminate one old Pod<br/>within maxUnavailable"]
+    PROBE -->|"Not ready"| HOLD["Rollout pauses<br/>old Pods keep serving traffic"]
+    TERM --> CHECK{"All old Pods replaced?"}
+    CHECK -->|"No"| CREATE
+    CHECK -->|"Yes"| DONE["Rollout complete<br/>zero downtime"]
+    HOLD --> RB["kubectl rollout undo"]
+```
+
+> **Figure:** The rolling update loop — one new Pod is added and proven healthy before an old Pod is removed.
+
+
 ---
 
 ### Prerequisites to try this:

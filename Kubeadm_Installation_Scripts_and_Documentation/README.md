@@ -2,6 +2,24 @@
 
 This guide outlines the steps needed to set up a Kubernetes cluster using `kubeadm`.
 
+```mermaid
+flowchart TD
+    PREP["Prepare all nodes<br/>swap off · kernel modules · sysctl"] --> CRI["Install containerd runtime"]
+    CRI --> TOOLS["Install kubeadm · kubelet · kubectl"]
+    TOOLS --> INIT["kubeadm init on the Master Node"]
+    INIT --> CP["Control Plane starts<br/>API Server · ETCD · Scheduler · Controller Manager"]
+    CP --> KUBECONFIG["Copy admin.conf to ~/.kube/config"]
+    KUBECONFIG --> CNI["Install a CNI network plugin"]
+    CP --> TOKEN["kubeadm token create --print-join-command"]
+    TOKEN --> JOIN["kubeadm join on each Worker Node<br/>port 6443"]
+    JOIN --> KUBELET["kubelet registers the Node"]
+    CNI --> READY["kubectl get nodes shows Ready"]
+    KUBELET --> READY
+```
+
+> **Figure:** The kubeadm bootstrap sequence — the master initializes the control plane, then each worker joins over port 6443 using the generated token.
+
+
 ## Prerequisites
 
 - Ubuntu OS (Xenial or later)

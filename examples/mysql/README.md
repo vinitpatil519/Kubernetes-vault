@@ -16,6 +16,20 @@
 
    Answer: A StorageClass is an abstraction that defines the storage provisioner and settings for dynamically creating PersistentVolumes. When deploying MySQL, StorageClass allows automatic provisioning of storage resources for PersistentVolumeClaims, ensuring data persistence.
 
+```mermaid
+flowchart LR
+    CM["ConfigMap<br/>non-sensitive settings"] --> API["API Server"]
+    SEC["Secret<br/>passwords and keys"] --> API
+    API --> KUBELET["kubelet"]
+    KUBELET --> POD["Pod"]
+    POD --> ENV["Environment variables<br/>envFrom · valueFrom"]
+    POD --> VOL["Mounted files<br/>volume of type configMap or secret"]
+    ENV --> APP["MySQL container"]
+    VOL --> APP
+```
+
+> **Figure:** Configuration lives outside the image — ConfigMaps and Secrets are injected into the Pod as environment variables or mounted files, so the same image runs in every environment.
+
 ### Manifest File Examples:
 
 1. **MySQL StorageClass and PersistentVolumeClaim (PVC) Manifests:**
