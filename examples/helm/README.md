@@ -6,6 +6,21 @@
 
 Helm is often referred to as the package manager for Kubernetes. It enables you to define, install, and manage even the most complex Kubernetes applications. Helm uses a packaging format called charts, which include all the resources needed to run an application, service, or a complete cloud-native stack inside Kubernetes.
 
+```mermaid
+flowchart LR
+    REPO["Chart repository"] --> CHART["Chart<br/>Chart.yaml · templates · values.yaml"]
+    CHART --> INSTALL["helm install / helm upgrade"]
+    OVR["--set and -f custom-values.yaml"] --> INSTALL
+    INSTALL --> RENDER["Rendered manifests"]
+    RENDER --> API["API Server"]
+    API --> RELEASE["Release revision 1 · 2 · 3"]
+    RELEASE --> OBJ["Deployment · Service · Ingress · ConfigMap"]
+    RELEASE -.->|"helm rollback"| PREV["Previous revision"]
+```
+
+> **Figure:** The Helm workflow — a chart plus values becomes a versioned release, and every upgrade is a new revision you can roll back to.
+
+
 ##### How to Install helm in Ubuntu
 
 ```

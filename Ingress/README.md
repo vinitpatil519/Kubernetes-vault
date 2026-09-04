@@ -11,6 +11,44 @@
 ### What we are going to implement:
 - In this demo, we will create two deployment and services i.e nginx and apache and with the help of ingress, we will route the traffic between the services
 
+```mermaid
+flowchart TD
+    NET["Internet"] --> IC["Ingress Controller<br/>NGINX"]
+    IC --> RULES["Ingress rules"]
+    RULES -->|"host: nginx.example.com"| SVC1["Service: nginx"]
+    RULES -->|"host: apache.example.com"| SVC2["Service: apache"]
+    RULES -->|"path: /api"| SVC3["Service: api"]
+    SVC1 --> P1["nginx Pods"]
+    SVC2 --> P2["apache Pods"]
+    SVC3 --> P3["api Pods"]
+```
+
+> **Figure:** One Ingress Controller fronts many Services — host and path rules decide which Service each request reaches.
+
+```mermaid
+flowchart TD
+    subgraph CIP["ClusterIP"]
+        C1["Internal client Pod"] --> C2["Service: ClusterIP"]
+        C2 --> C3["Pods"]
+    end
+
+    subgraph NP["NodePort"]
+        N1["External client"] --> N2["NodeIP:30080"]
+        N2 --> N3["Service: NodePort"]
+        N3 --> N4["Pods"]
+    end
+
+    subgraph LBC["LoadBalancer"]
+        L1["Internet"] --> L2["Cloud Load Balancer"]
+        L2 --> L3["NodePort on every Node"]
+        L3 --> L4["Service: ClusterIP"]
+        L4 --> L5["Pods"]
+    end
+```
+
+> **Figure:** ClusterIP is internal only, NodePort exposes a port on every node, and LoadBalancer layers a cloud load balancer on top of NodePort — each type builds on the one before it.
+
+
 #
 ## Steps to implement ingress:
 

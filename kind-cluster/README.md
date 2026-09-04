@@ -1,5 +1,21 @@
 # KIND Cluster Setup Guide
 
+```mermaid
+flowchart TD
+    HOST["Your machine"] --> DOCKER["Docker Engine"]
+    DOCKER --> CP["Container: control-plane<br/>API Server · ETCD · Scheduler · Controller Manager"]
+    DOCKER --> W1["Container: worker 1<br/>kubelet · kube-proxy"]
+    DOCKER --> W2["Container: worker 2<br/>kubelet · kube-proxy"]
+    CP --> W1
+    CP --> W2
+    W1 --> P1["Pods"]
+    W2 --> P2["Pods"]
+    KCTL["kubectl"] --> CP
+    PORTS["extraPortMappings<br/>host port to node port"] -.-> W1
+```
+
+> **Figure:** KIND runs each Kubernetes node as a Docker container on a single host — the cluster is real, the nodes are containers.
+
 ## 1. Installing KIND and kubectl
 Install KIND and kubectl using the provided [script](https://github.com/LondheShubham153/kubestarter/blob/main/kind-cluster/install.sh):
 

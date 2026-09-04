@@ -39,6 +39,28 @@ Let us understand this through a simple workflow of a CI/CD pipeline for a conta
 
 <img width="1147" alt="Screenshot 2023-08-21 at 4 16 35 PM" src="https://github.com/bwarikoo/kubestarter/assets/32089999/086c90df-b741-4cac-8f5e-b7904d03d989">
 
+```mermaid
+flowchart TD
+    DEV["Developer commits code"] --> GH["GitHub"]
+    GH --> CI["GitHub Actions / Jenkins"]
+    CI --> BUILD["Docker build"]
+    BUILD --> TEST["Automated tests"]
+    TEST --> REG["Container Registry<br/>DockerHub · ECR · GHCR"]
+    REG --> STG["Deploy to Staging namespace"]
+    STG --> VAL["Automated validation in Staging"]
+    VAL -->|"Passed"| PROD["Deploy to Production"]
+    VAL -->|"Failed"| ROLLBACK["Rollback / fix and retry"]
+    PROD --> DEPLOY["Deployment"]
+    DEPLOY --> RS["ReplicaSet"]
+    RS --> PODS["Pods"]
+    PODS --> SVC["Service"]
+    SVC --> ING["Ingress"]
+    ING --> USERS["Users"]
+```
+
+> **Figure:** The end-to-end CI/CD workflow — the same deployment manifest promotes an image from Staging to Production.
+
+
 
 ## Conclusion
 

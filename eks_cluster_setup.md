@@ -1,5 +1,22 @@
 # How to create EKS cluster using eksctl utility
 
+```mermaid
+flowchart TD
+    CLI["eksctl on your machine"] --> CFN["AWS CloudFormation"]
+    CFN --> CP["EKS Control Plane<br/>managed by AWS · multi-AZ"]
+    CFN --> NG["Managed Node Group<br/>EC2 worker nodes"]
+    CP --> NG
+    OIDC["IAM OIDC provider"] -.-> CP
+    NG --> PODS["Pods"]
+    KCFG["aws eks update-kubeconfig"] --> KCTL["kubectl"]
+    KCTL --> CP
+    ELB["Elastic Load Balancer"] --> PODS
+    USERS["Users"] --> ELB
+```
+
+> **Figure:** On EKS the control plane is AWS-managed; `eksctl` provisions it plus the node group through CloudFormation, and your kubeconfig points `kubectl` at the managed endpoint.
+
+
 ## Pre-requisites:
 - IAM user with **access keys and secret access keys**
 - AWSCLI should be configured (<a href="https://github.com/DevMadhup/DevOps-Tools-Installations/blob/main/AWSCLI/AWSCLI.sh">Setup AWSCLI</a>)

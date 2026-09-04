@@ -16,6 +16,21 @@
 
    Answer: A Namespace provides a virtual cluster environment within a physical cluster. It helps in organizing and isolating resources, making it easier to manage and monitor Nginx-related components separately.
 
+```mermaid
+flowchart TD
+    USER["Client"] --> SVC["Service: nginx<br/>stable virtual IP"]
+    SVC --> PROXY["kube-proxy"]
+    PROXY --> POD1["nginx Pod 1"]
+    PROXY --> POD2["nginx Pod 2"]
+    PROXY --> POD3["nginx Pod 3"]
+    DEP["Deployment: nginx"] --> RS["ReplicaSet"]
+    RS --> POD1
+    RS --> POD2
+    RS --> POD3
+```
+
+> **Figure:** The Deployment keeps the desired number of nginx Pods alive; the Service load balances client traffic across whichever Pods currently exist.
+
 ### Manifest File Examples:
 
 1. **Nginx Pod Manifest in "nginx" Namespace:**

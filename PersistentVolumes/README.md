@@ -10,6 +10,35 @@
 
 ### What we are going to implement:
 - In this demo, we will create persistent volumes (PV) and persistent volume claim (PVC) to persist the data of an application so that it can be restored if our application crashes.
+
+```mermaid
+flowchart TD
+    APP["Application container"] --> MOUNT["volumeMounts"]
+    MOUNT --> PVC["PersistentVolumeClaim<br/>requested size and access mode"]
+    PVC -->|"Bound"| PV["PersistentVolume<br/>actual storage resource"]
+    PV --> SC["StorageClass<br/>provisioner"]
+    SC --> DISK["Backing storage<br/>hostPath · EBS · Azure Disk · NFS"]
+    PVC -.->|"Dynamic provisioning"| SC
+    SC -.->|"Creates a PersistentVolume on demand"| PV
+```
+
+> **Figure:** The storage chain — a Pod mounts a PersistentVolumeClaim, which binds to a PersistentVolume backed by real storage, either provisioned ahead of time or dynamically by a StorageClass.
+
+```mermaid
+graph TD
+    STS["StatefulSet"] --> POD0["Pod: web-0"]
+    STS --> POD1["Pod: web-1"]
+    STS --> POD2["Pod: web-2"]
+    POD0 --> PVC0["PersistentVolumeClaim: data-web-0"]
+    POD1 --> PVC1["PersistentVolumeClaim: data-web-1"]
+    POD2 --> PVC2["PersistentVolumeClaim: data-web-2"]
+    PVC0 --> PV0["PersistentVolume 0"]
+    PVC1 --> PV1["PersistentVolume 1"]
+    PVC2 --> PV2["PersistentVolume 2"]
+```
+
+> **Figure:** A StatefulSet gives each Pod a stable name and its own PersistentVolumeClaim, so `web-0` reattaches to the same volume after a restart.
+
 #
 ## Steps to implement ingress:
 
